@@ -40,6 +40,7 @@ export const register = async (req, res) => {
 
 export const verify = async (req, res) => {
     const { verifyCode } = req.body;
+    
     const userId = res.locals.user[0].userId;
     try {
         const [user] = await pool.query("SELECT * FROM user WHERE userId = ?", [userId]);
@@ -47,12 +48,13 @@ export const verify = async (req, res) => {
             return sendError(res, HttpStatusCode.BAD_REQUEST, "Verify code is incorrect");
         }
         //if verify code is correct, update isVerify to true
-        await pool.query("UPDATE user SET isVerify = ? WHERE userId = ?", [true, userId]);
+        await pool.query("UPDATE user SET isVerified = ? WHERE userId = ?", [true, userId]);
         const [userUpdated] = await pool.query("SELECT * FROM user WHERE userId = ?", [userId]);
 
         return sendSucces(res, "verify successfully", omit(userUpdated[0], "password"));
     }
     catch (error) {
+        console.log(error);
         return sendErrorServerInterval(res, error);
     }
 }
@@ -90,15 +92,12 @@ export const login = async (req, res) => {
         if (!isMatch) {
             return sendError(res, HttpStatusCode.BAD_REQUEST, "Username or password is incorrect");
         }
-        //reset token before new login
+
         const accessToken = jwt.sign({ userId: user[0].userId }, process.env.JWT_SECRET_KEY, { expiresIn: "1d" });
         return sendSucces(res, "login successfully", { user: omit(user[0], "password"), accessToken });
-        // const [user] = await pool.query("SELECT * FROM user WHERE username = ?", [username]);
-
-        // const accessToken = jwt.sign({ userId: user[0].userId }, process.env.JWT_SECRET_KEY, { expiresIn: "1d" });
-        // return sendSucces(res, "login successfully", { user: omit(user[0], "password"), accessToken });
 
     } catch (error) {
+        console.log(error);
         return sendErrorServerInterval(res, error);
     }
 }
