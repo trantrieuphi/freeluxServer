@@ -1,10 +1,10 @@
 create schema FreeluxDB;
 use FreeluxDB;
 
-DROP TABLE IF EXISTS user;
+-- DROP TABLE IF EXISTS user;
 
 CREATE TABLE user (
-	-- id int(11) NOT NULL AUTO_INCREMENT,
+-- 	id int(11) NOT NULL AUTO_INCREMENT,
 	userId varchar(255) NOT NULL UNIQUE,
 	firstName varchar(255) NOT NULL,
 	lastName varchar(255) NOT NULL,
@@ -12,8 +12,8 @@ CREATE TABLE user (
 	role ENUM ("admin", "instructor", "user") DEFAULT "user",
 	username varchar(255) NOT NULL UNIQUE,
 	password varchar(255) NOT NULL,
-	verifyCode varchar(255),
 	isVerified BOOLEAN DEFAULT FALSE,
+	verifyCode varchar(255);
 	PRIMARY KEY (userId)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
