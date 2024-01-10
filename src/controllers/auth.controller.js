@@ -40,7 +40,10 @@ export const register = async (req, res) => {
 
 export const verify = async (req, res) => {
     const { verifyCode } = req.body;
-    
+    if(!res.locals.user){
+        //not have user
+        return sendError(res, HttpStatusCode.BAD_REQUEST, "Not have user");
+    }
     const userId = res.locals.user[0].userId;
     try {
         const [user] = await pool.query("SELECT * FROM user WHERE userId = ?", [userId]);
@@ -60,6 +63,10 @@ export const verify = async (req, res) => {
 }
 
 export const resendVerifyCode = async (req, res) => {
+    if(!res.locals.user){
+        //not have user
+        return sendError(res, HttpStatusCode.BAD_REQUEST, "Not have user");
+    }
     const userId = res.locals.user[0].userId;
     try {
         const [user] = await pool.query("SELECT * FROM user WHERE userId = ?", [userId]);
