@@ -4,6 +4,9 @@ import { pool } from "../helper/db.js";
 
 export const deserializeUser = async (req, res, next) => {
     const data = req.headers['authorization'];
+    if (!data) {
+        return sendError(res, HttpStatusCode.UNAUTHORIZED, "Unauthorized");
+    }
     const accessToken = data.split(" ")[1];
     // console.log(accessToken);
     try {
@@ -28,9 +31,10 @@ export const requireUser = (req, res, next) => {
 }
 
 export const requireVerify = (req, res, next) => {
-    const { user } = res.locals;
-    console.log(user);
-    if (!user.isVerify) {
+    const user  = res.locals.user;
+    // console.log(user);
+    // console.log(user[0].isVerified);
+    if (!user[0].isVerified) {
         return sendError(res, HttpStatusCode.UNAUTHORIZED, "Not verify.");
     }
     next();

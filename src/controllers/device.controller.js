@@ -28,10 +28,18 @@ export const getDeviceById = async (req, res) => {
 
 export const getAllDeviceByUserId = async (req, res) => {
     const userId = parseInt(req.params.userId);
+    // console.log(userId);
     try {
-        const query = "SELECT * FROM device WHERE id IN (SELECT deviceId FROM relatedDevice WHERE userId = ?)";
+        // handle uuid to id
+
+        const query = "SELECT * FROM device WHERE id IN (SELECT deviceID FROM relatedDevice WHERE userID = ?)";
         //get all device id by userId from relatedDevice table
         const [devices] = await pool.query(query, [userId]);
+        // console.log(devices);
+        if (devices.length === 0) {
+            return sendError(res, HttpStatusCode.NOT_FOUND, "Device not found");
+        }
+
         return sendSucces(res, HttpStatusCode.OK, devices);
 
     }
@@ -41,7 +49,7 @@ export const getAllDeviceByUserId = async (req, res) => {
 }
 
 export const createDevice = async (req, res) => {
-    const { name, macAddress, clientId, pairingCode, deviceType, connectionCounter} = req.body;
+    const { name, macAddress, clientID, pairingCode, deviceType, connectionCounter} = req.body;
     const userId = res.locals.user[0].userId;
     // console.log(userId);
     try {
@@ -50,7 +58,7 @@ export const createDevice = async (req, res) => {
             return sendError(res, HttpStatusCode.BAD_REQUEST, "Device already exists");
         }
         //insert new device to device table and insert new device to relatedDevice table
-        const [newDevice] = await pool.query("INSERT INTO device (name, macAddress, clientId, pairingCode, deviceType, connectionCounter) VALUES (?, ?, ?, ?, ?, ?)", [name, macAddress, clientId, pairingCode, deviceType, connectionCounter]);
+        const [newDevice] = await pool.query("INSERT INTO device (name, macAddress, clientID, pairingCode, deviceType, connectionCounter) VALUES (?, ?, ?, ?, ?, ?)", [name, macAddress, clientID, pairingCode, deviceType, connectionCounter]);
         //insert new device to relatedDevice table
         await pool.query("INSERT INTO relatedDevice (userId, deviceId) VALUES (?, ?)", [userId, newDevice.insertId]);
 

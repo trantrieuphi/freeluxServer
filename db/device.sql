@@ -2,9 +2,9 @@ use FreeluxDB;
 CREATE TABLE device (
     id int(11) NOT NULL AUTO_INCREMENT,
     name varchar(255) NOT NULL,
-    macAddress varchar(255) NOT NULL UNIQUE,
-    clientID varchar(255) NOT NULL UNIQUE,
-    pairingCode varchar(255) NOT NULL UNIQUE,
+    macAddress varchar(255),
+    clientID varchar(255),
+    pairingCode varchar(255) NOT NULL,
     deviceType ENUM ("gateway", "device") DEFAULT "device",
     connectionCounter int(11) NOT NULL DEFAULT 0,
     PRIMARY KEY (id)
