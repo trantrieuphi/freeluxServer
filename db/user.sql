@@ -13,7 +13,7 @@ CREATE TABLE user (
 	username varchar(255) NOT NULL UNIQUE,
 	password varchar(255) NOT NULL,
 	isVerified BOOLEAN DEFAULT FALSE,
-	verifyCode varchar(255);
+	verifyCode varchar(255),
 	PRIMARY KEY (userId)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
