@@ -28,6 +28,7 @@ Reponse:
 - jwt token
 
 ### Login
+Method: POST
 Login user
 ```
 {url}/api/auth/login
@@ -44,6 +45,7 @@ Response:
 - jwt token
 
 ### Verify
+METHOD: POST
 Verify user
 ```
 {url}/api/auth/verify
@@ -63,17 +65,13 @@ Response:
 - message: "verify successfully"
 
 ### Send Verify code again:
+Method: POST
 Verify user
 ```
 {url}/api/auth/resend-verify-code
 ```
 Request example:
 - Body:
-```
-{
-    "verifyCode": "600195"
-}
-```
 - Header:
 ```
 Authorization: Bearer {{jwt token}}
